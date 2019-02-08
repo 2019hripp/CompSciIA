@@ -1,6 +1,6 @@
 from flask import *
 from app import app
-from app.models import compounds
+from app.models import functions
 
 @app.route('/')
 @app.route('/index')
@@ -31,9 +31,13 @@ firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
 
-@app.route('/database', methods=["POST"])
-def database():
-    return render_template("/database.html")
+@app.route('/enterData')
+def enterData():
+    return render_template("/enterData.html")
+
+@app.route('/contEnterData')
+def contEnterData():
+    return render_template("/contEnterData.html")
 
 @app.route('/shoData', methods=["GET", "POST"])
 def shoData():
@@ -42,8 +46,36 @@ def shoData():
     #     db.child("initval").push(number)
     #     initval = db.child("initval").get()
     #     num = initval.val()
-    #     return render_template('/database.html', t=num.values())
+    #     return render_template('/enterData.html', t=num.values())
+
     compoundData = dict(request.form)
     print(compoundData)
-    allVals = compounds.compInt(compoundData["init_val"][0], compoundData["intR"][0], compoundData["yearC"][0], compoundData["years"][0])
+    allVals = functions.compInt(compoundData["init_val"][0], compoundData["intR"][0], compoundData["yearC"][0], compoundData["years"][0])
+
     return render_template('/shoData.html', ans=allVals)
+
+# ---------------------------------------------------------------------------------
+# Continuous Compound
+
+@app.route('/contShoData', methods=["GET", "POST"])
+def contShoData():
+    # if request.method == 'POST':
+    #     number = request.form['number']
+    #     db.child("initval").push(number)
+    #     initval = db.child("initval").get()
+    #     num = initval.val()
+    #     return render_template('/enterData.html', t=num.values())
+
+
+    contCompoundData = dict(request.form)
+    print(contCompoundData)
+    contAllVals = functions.contCompInt(contCompoundData["contInit_val"][0], contCompoundData["contIntR"][0], contCompoundData["contYears"][0])
+
+    return render_template('/contShoData.html', contAns=contAllVals)
+#
+# ---------------------------------------------------------------------------------
+# Login Information
+
+    # contAllVals = functions.contCompInt(contCompoundData["contInit_val"][0], compoundData["contIntR"][0], compoundData["contYears"][0])
+    #
+    # return render_template('/enterData.html')
