@@ -31,26 +31,35 @@ firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
 
+@app.route('/allData', methods=["GET", "POST"])
+def allData():
+    getCompounds = db.child('initval').get()
+    showCompound = getCompounds.val()
+    return render_template("/allData.html", showCompound=showCompound)
+
+# ---------------------------------------------------------------------------------
+
 @app.route('/enterData')
 def enterData():
     return render_template("/enterData.html")
+
+# ---------------------------------------------------------------------------------
 
 @app.route('/contEnterData')
 def contEnterData():
     return render_template("/contEnterData.html")
 
+# ---------------------------------------------------------------------------------
+
 @app.route('/shoData', methods=["GET", "POST"])
 def shoData():
-    # if request.method == 'POST':
-    #     number = request.form['number']
-    #     db.child("initval").push(number)
-    #     initval = db.child("initval").get()
-    #     num = initval.val()
-    #     return render_template('/enterData.html', t=num.values())
-
     compoundData = dict(request.form)
     print(compoundData)
     allVals = functions.compInt(compoundData["init_val"][0], compoundData["intR"][0], compoundData["yearC"][0], compoundData["years"][0])
+    #number = request.form['number']
+    db.child("initval").push(allVals)
+    initval = db.child("initval").get()
+    #num = initval.val()
 
     return render_template('/shoData.html', ans=allVals)
 
@@ -59,20 +68,24 @@ def shoData():
 
 @app.route('/contShoData', methods=["GET", "POST"])
 def contShoData():
-    # if request.method == 'POST':
-    #     number = request.form['number']
-    #     db.child("initval").push(number)
-    #     initval = db.child("initval").get()
-    #     num = initval.val()
-    #     return render_template('/enterData.html', t=num.values())
-
-
     contCompoundData = dict(request.form)
     print(contCompoundData)
     contAllVals = functions.contCompInt(contCompoundData["contInit_val"][0], contCompoundData["contIntR"][0], contCompoundData["contYears"][0])
+    db.child('contInit_val').push(contAllVals)
+    # if request.method == 'POST':
+        # number = request.form['number']
+    initval = db.child("contInit_val").get()
+    num = initval.val()
 
-    return render_template('/contShoData.html', contAns=contAllVals)
+    return render_template('/contShoData.html', t=num.values())
+
+
+#     contCompoundData = dict(request.form)
+#     print(contCompoundData)
+#     contAllVals = functions.contCompInt(contCompoundData["contInit_val"][0], contCompoundData["contIntR"][0], contCompoundData["contYears"][0])
 #
+#     return render_template('/contShoData.html', contAns=contAllVals)
+# #
 # ---------------------------------------------------------------------------------
 # Login Information
 
