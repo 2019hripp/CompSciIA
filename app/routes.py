@@ -35,7 +35,11 @@ db = firebase.database()
 def allData():
     getCompounds = db.child('initval').get()
     showCompound = getCompounds.val()
-    return render_template("/allData.html", showCompound=showCompound)
+
+    get_contInit = db.child('contInit_val').get()
+    show_contInit = get_contInit.val()
+
+    return render_template("/allData.html", showCompound=showCompound.values(), showCont=show_contInit.values())
 
 # ---------------------------------------------------------------------------------
 
