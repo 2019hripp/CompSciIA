@@ -7,13 +7,6 @@ from app.models import functions
 def index():
     return render_template('index.html')
 
-@app.route('/graph')
-def graph():
-    return render_template('graph.html')
-
-
-
-
 # data base
 import pyrebase
 
@@ -31,15 +24,30 @@ firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
 
-@app.route('/allData', methods=["GET", "POST"])
+@app.route('/allData', methods=["GET", "POST", "DELETE"])
 def allData():
-    getCompounds = db.child('initval').get()
-    showCompound = getCompounds.val()
 
-    get_contInit = db.child('contInit_val').get()
+    regIter = db.child('reg').get()
+    showRegIter = regIter.val()
+    innerRegIter = db.child('reg').child('firstSet').get()
+    showInnerRegIter = innerRegIter.val()
+
+
+    get_contInit = db.child('cont').get()
     show_contInit = get_contInit.val()
 
-    return render_template("/allData.html", showCompound=showCompound.values(), showCont=show_contInit.values())
+    # db.child("reg").child("childName").remove()
+    # db.child("reg").child("newTest").remove()
+
+
+    return render_template("/allData.html", showInnerRegIter=showInnerRegIter.values(), showRegIter=showRegIter.values(), showCont=show_contInit.values())
+
+# ---------------------------------------------------------------------------------
+
+# @app.route('/delete_article/<string:id>', methods=['DELETE'])
+# def delete_x(id):
+#     pass
+
 
 # ---------------------------------------------------------------------------------
 
@@ -56,14 +64,27 @@ def contEnterData():
 # ---------------------------------------------------------------------------------
 
 @app.route('/shoData', methods=["GET", "POST"])
+
 def shoData():
     compoundData = dict(request.form)
     print(compoundData)
     allVals = functions.compInt(compoundData["init_val"][0], compoundData["intR"][0], compoundData["yearC"][0], compoundData["years"][0])
-    #number = request.form['number']
-    db.child("initval").push(allVals)
-    initval = db.child("initval").get()
-    #num = initval.val()
+    db.child("reg").child("thirdSet").push(allVals)
+    initialValue = compoundData["init_val"][0]
+    db.child("reg").child("thirdSet").push(initialValue)
+    InterestRate = compoundData["intR"][0]
+    db.child("reg").child("thirdSet").push(InterestRate)
+    CompoundsPerYear = compoundData["yearC"][0]
+    db.child("reg").child("thirdSet").push(CompoundsPerYear)
+    AmountOfYears = compoundData["years"][0]
+    db.child("reg").child("thirdSet").push(AmountOfYears)
+
+    # db.child("reg").push(allVals, initialValue)
+
+    initval = db.child("reg").get()
+    num = initval.val()
+
+    # memes = db.child("reg").child("oof").pu()
 
     return render_template('/shoData.html', ans=allVals)
 
@@ -75,13 +96,11 @@ def contShoData():
     contCompoundData = dict(request.form)
     print(contCompoundData)
     contAllVals = functions.contCompInt(contCompoundData["contInit_val"][0], contCompoundData["contIntR"][0], contCompoundData["contYears"][0])
-    db.child('contInit_val').push(contAllVals)
-    # if request.method == 'POST':
-        # number = request.form['number']
-    initval = db.child("contInit_val").get()
-    num = initval.val()
+    db.child('cont').push(contAllVals)
+    contInitval = db.child("cont").get()
+    num = contInitval.val()
 
-    return render_template('/contShoData.html', t=num.values())
+    return render_template('/contShoData.html', t=contAllVals)
 
 
 #     contCompoundData = dict(request.form)
