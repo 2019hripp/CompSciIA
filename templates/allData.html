@@ -1,0 +1,83 @@
+<center>
+
+<h1> Data Compounded Regularly </h1>
+
+<table width=50%>
+
+{%for x in showRegIter%}
+  {%for a,b in x.items()%}
+
+    <tr>
+      <td>
+        <p>{{b}}</p>
+      </td>
+
+      <td>
+        <form action="/allData" method="delete">
+          <input type="hidden" name="_method" value="DELETE">
+          <input type="submit" value="delete" class="btn btn-danger" onClick="db.child({{a}})">
+        </form>
+      </td>
+    </tr>
+
+
+  {%endfor%}
+{%endfor%}
+</table>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
+
+
+
+<h1>Data Compounded Continuously</h1>
+
+<table width=50%>
+
+  {%for y in showContRegIter%}
+    {%for c,d in y.items()%}
+
+      <tr>
+        <td>
+          <p>{{d}}</p>
+        </td>
+
+        <td>
+          <form action="/allData" method="delete">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" value="delete" class="btn btn-danger">
+          </form>
+        </td>
+      </tr>
+
+    {%endfor%}
+  {%endfor%}
+</table>
+
+
+
+
+
+
+
+
+
+  <INPUT TYPE="button" onClick="history.go(0)" VALUE="Reload">
+  <center><a href="/index"><button>Back to Index</button></a></center>
+
+<br/>
+
+<table>
+  <tr>
+    <td><center><a href="/enterData"><button>Compound More Values</button></a></center></td>
+    <td><center><a href="/contEnterData"><button>Continuously Compound More Values</button></a></center></td>
+  </tr>
+</table>
+
+</center>
