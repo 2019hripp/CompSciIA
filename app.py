@@ -68,7 +68,7 @@ def contEnterData():
 def shoData():
     compoundData = dict(request.form)
     print(compoundData)
-    allVals = functions.compInt(compoundData["init_val"][0], compoundData["intR"][0], compoundData["yearC"][0], compoundData["years"][0])
+    allVals = functions.compInt(compoundData["init_val"], compoundData["intR"], compoundData["yearC"], compoundData["years"])
     db.child("reg").child("fourthSet").push(allVals)
     InitialValue = compoundData["init_val"][0]
     db.child("reg").child("fourthSet").push(InitialValue)
@@ -91,7 +91,7 @@ def shoData():
 def contShoData():
     contCompoundData = dict(request.form)
     print(contCompoundData)
-    contAllVals = functions.contCompInt(contCompoundData["contInit_val"][0], contCompoundData["contIntR"][0], contCompoundData["contYears"][0])
+    contAllVals = functions.contCompInt(contCompoundData["contInit_val"], contCompoundData["contIntR"], contCompoundData["contYears"])
     db.child('cont').child("setFour").push(contAllVals)
     initialValue = contCompoundData["contInit_val"][0]
     db.child('cont').child("setFour").push(initialValue)
