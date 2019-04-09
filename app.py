@@ -1,6 +1,5 @@
 import os
 from flask import *
-from models import *
 from models import functions
 
 
